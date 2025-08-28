@@ -30,6 +30,11 @@
         <input asp-for="CustomerPhone" class="form-control" />
         <span asp-validation-for="CustomerPhone" class="text-danger"></span>
     </div>
+    @* Code Attribution *@
+    @*This method was taken from stakoverflow*@
+    @*https://stackoverflow.com/questions/2503923/html-button-calling-an-mvc-controller-and-action-method*@
+    @*Jon Galloway*@
+    @*https://stackoverflow.com/users/5/jon-galloway*@
 
     <button type="submit" class="btn btn-primary">Create</button>
     <a class="btn btn-secondary" asp-action="Index">Cancel</a>

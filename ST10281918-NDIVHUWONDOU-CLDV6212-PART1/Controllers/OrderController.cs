@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Models;
 using ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Services;
 using ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Services.Storage;
 using System.Threading.Tasks;
+using Order = ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Models.Order;
 
 namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Controllers
 {
@@ -36,7 +38,7 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Controllers
             {
                 Order = o,
                 CustomerName = customer.FirstOrDefault(c => c.RowKey == o.CustomerId)?.CustomerFirstName ?? "Unknown",
-                ProductName = product.FirstOrDefault(p => p.RowKey == p.ProductId)?.ProductName ?? "Unknown",
+                ProductName = product.FirstOrDefault(p => p.RowKey == o.ProductId)?.ProductName ?? "Unknown",
             });
 
             ViewBag.Orders = orderList;
@@ -74,10 +76,23 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Controllers
             {
                 order.PartitionKey = "order";
                 order.RowKey = Guid.NewGuid().ToString();
-                order.OrderDate = DateTime.UtcNow;
+                order.OrderDate = DateTime.SpecifyKind(order.OrderDate, DateTimeKind.Utc);
+                //order.OrderDate = DateTime.UtcNow;
 
                 await _orderService.AddOrderAsync(order);
 
+                // Audit log
+                await _queueStorageService.SendMessagesAsync(new
+                {
+                    Action = "Create Order",
+                    Entity = "Order",
+                    OrderId = order.OrderId,
+                    OrderDate = order.OrderDate,
+                    Status = order.OrderStatus,
+                    Customer = order.CustomerId,
+                    Product = order.ProductId,
+                    Timestamp = DateTime.UtcNow
+                });
 
                 return RedirectToAction(nameof(Index));
             }
@@ -95,6 +110,12 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Controllers
             return View(release);
         }
 
+        //Code Attribution
+        //This method was taken from stackoverflow
+        //https://stackoverflow.com/questions/7984379/how-can-i-make-an-mvc-post-return-me-to-the-previous-page
+        //Samantha J T Star
+        //https://stackoverflow.com/users/975566/samantha-j-t-star
+
         // POST: /Release/Edit/{partitionKey}/{rowKey}
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -104,6 +125,20 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Controllers
             {
                 order.OrderDate = DateTime.SpecifyKind(order.OrderDate, DateTimeKind.Utc);
                 await _orderService.UpdateOrderAsync(order);
+
+                // Audit log
+                await _queueStorageService.SendMessagesAsync(new
+                {
+                    Action = "Edit Order",
+                    Entity = "Order",
+                    OrderId = order.OrderId,
+                    OrderDate = order.OrderDate,
+                    Status = order.OrderStatus,
+                    Customer = order.CustomerId,
+                    Product = order.ProductId,
+                    Timestamp = DateTime.UtcNow
+                });
+
                 return RedirectToAction(nameof(Index));
             }
             await PopulateDropdowns();
@@ -131,6 +166,15 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Controllers
         public async Task<IActionResult> DeleteConfirmed(string partitionKey, string rowKey)
         {
             await _orderService.DeleteOrderAsync(partitionKey, rowKey);
+
+            // Audit log
+            await _queueStorageService.SendMessagesAsync(new
+            {
+                Action = "Delete Order",
+                Entity = "Order",
+                Timestamp = DateTime.UtcNow
+            });
+
             return RedirectToAction(nameof(Index));
         }
 

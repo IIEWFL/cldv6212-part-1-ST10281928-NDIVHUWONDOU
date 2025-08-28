@@ -66,6 +66,10 @@
             "Azure.Storage.Queues": {
               "target": "Package",
               "version": "[12.23.0, )"
+            },
+            "ClosedXML": {
+              "target": "Package",
+              "version": "[0.105.0, )"
             }
           },
           "imports": [

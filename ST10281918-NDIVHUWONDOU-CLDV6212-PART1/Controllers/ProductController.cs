@@ -36,6 +36,10 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Controllers
         {
             return View();
         }
+        //Code Attribution
+        //This method was taken from the Miscrosoft website
+        //https://learn.microsoft.com/en-us/azure/storage/blobs/storage-blob-upload
+        //Microsoft
 
         //POST: Product/Create
         [HttpPost]
