@@ -48,6 +48,17 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Controllers
                     CustomerPhone = customer.CustomerPhone
                 };
                 await _customerService.AddCustomerAsync(customerValue);
+
+                // Audit log
+                await _queueStorageService.SendMessagesAsync(new
+                {
+                    Action = "Create Customer",
+                    Entity = "Customer",
+                    CustomerId = customer.CustomerID,
+                    CustomerName = customer.CustomerFirstName,
+                    CustomerRowKey = customer.RowKey,
+                    Timestamp = DateTime.UtcNow
+                });
                 return RedirectToAction(nameof(Index));
             }
             return View(customer);

@@ -9,6 +9,7 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Models
         public string? RowKey { get; set; }
         public DateTimeOffset? Timestamp { get; set; }
         public ETag ETag { get; set; }
+        public DateTime OrderDate { get; set; }
         public string? OrderId { get; set; }
         public string? CustomerId { get; set; }
         public string? ProductId { get; set; }

@@ -26,7 +26,7 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Services
         {
             if (imageStream != null && fileName != null)
             {
-                product.PhotoURL = await _blobService.UploadImageAsync(imageStream, fileName);
+                product.Photo = await _blobService.UploadImageAsync(imageStream, fileName);
             }
 
             await _tableService.AddAsync(product);
@@ -38,13 +38,13 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Services
             if (newImageStream != null && !string.IsNullOrEmpty(newFileName))
             {
                 // Delete old image if exists
-                if (!string.IsNullOrEmpty(product.PhotoURL))
+                if (!string.IsNullOrEmpty(product.Photo))
                 {
-                    await _blobService.DeleteImageAsync(product.PhotoURL);
+                    await _blobService.DeleteImageAsync(product.Photo);
                 }
 
                 // Upload new image
-                product.PhotoURL = await _blobService.UploadImageAsync(newImageStream, newFileName);
+                product.Photo = await _blobService.UploadImageAsync(newImageStream, newFileName);
             }
 
             await _tableService.UpdateAsync(product);

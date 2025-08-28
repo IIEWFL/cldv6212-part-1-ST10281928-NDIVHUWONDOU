@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ST10281918-NDIVHUWONDOU-CLDV6212-PART1")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c9e3e547e1cdfcbf8f6584642333d3fdfe1794a4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fd75ad448fef718f1ef8ddea431080bd47ddb43e")]
 [assembly: System.Reflection.AssemblyProductAttribute("ST10281918-NDIVHUWONDOU-CLDV6212-PART1")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ST10281918-NDIVHUWONDOU-CLDV6212-PART1")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
