@@ -83,6 +83,7 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Controllers
             {
                 return NotFound();
             }
+
             return View(customer);  
         }
 
@@ -107,6 +108,18 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Controllers
                         return NotFound();
                     }
                     await _customerService.UpdateCustomerAsync(customer);
+
+                    // Audit log
+                    await _queueStorageService.SendMessagesAsync(new
+                    {
+                        Action = "Edit Customer",
+                        Entity = "Customer",
+                        CustomerId = customer.CustomerID,
+                        CustomerName = customer.CustomerFirstName,
+                        CustomerRowKey = customer.RowKey,
+                        Timestamp = DateTime.UtcNow
+                    });
+
 
                     return RedirectToAction(nameof(Index));
                 }
@@ -141,6 +154,17 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Controllers
             {
                 await _customerService.DeleteCustomerAsync(partitionKey, rowKey);
             }
+            // Audit log
+            await _queueStorageService.SendMessagesAsync(new
+            {
+                Action = "Delete Customer",
+                Entity = "Customer",
+                CustomerId = customer.CustomerID,
+                CustomerName = customer.CustomerFirstName,
+                CustomerRowKey = customer.RowKey,
+                Timestamp = DateTime.UtcNow
+            });
+
             return RedirectToAction(nameof(Index));
  
         }

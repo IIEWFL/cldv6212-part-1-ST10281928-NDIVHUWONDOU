@@ -68,6 +68,7 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Services
 
 
         public Task UpdateOrderAsync(Order order)
+
             => _tableService.UpdateAsync(order);
 
         public Task DeleteOrderAsync(string partitionKey, string rowKey)

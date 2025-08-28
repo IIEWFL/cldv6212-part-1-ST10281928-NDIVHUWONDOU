@@ -21,15 +21,15 @@
         @foreach (var o in orderWithNames)
         {
             <tr>
-                <td>@o.Orders.CustomerId</td>
-                <td>@o.Orders.ProductId</td>
-                <td>@o.Orders.OrderDate.ToShortDateString()</td>
-                <td>@o.Orders.Quantity</td>
-                <td>@o.Orders.OrderStatus</td>
+                <td>@o.CustomerName</td>
+                <td>@o.ProductName</td> 
+               <td>@o.Order.OrderDate.ToShortDateString()</td> 
+                <td>@o.Order.Quantity</td>
+                <td>@o.Order.OrderStatus</td>
                 <td>
-                    <a asp-action="Details" asp-route-partitionKey="@o.Orders.PartitionKey" asp-route-rowKey="@o.Orders.RowKey">Details</a> |
-                    <a asp-action="Edit" asp-route-partitionKey="@o.Orders.PartitionKey" asp-route-rowKey="@o.Orders.RowKey">Edit</a> |
-                    <a asp-action="Delete" asp-route-partitionKey="@o.Orders.PartitionKey" asp-route-rowKey="@o.Orders.RowKey">Delete</a>
+                    <a asp-action="Details" asp-route-partitionKey="@o.Order.PartitionKey" asp-route-rowKey="@o.Order.RowKey">Details</a> |
+                    <a asp-action="Edit" asp-route-partitionKey="@o.Order.PartitionKey" asp-route-rowKey="@o.Order.RowKey">Edit</a> |
+                    <a asp-action="Delete" asp-route-partitionKey="@o.Order.PartitionKey" asp-route-rowKey="@o.Order.RowKey">Delete</a>
                 </td>
             </tr>
         }

@@ -55,6 +55,17 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Controllers
                 product.RowKey = Guid.NewGuid().ToString();
 
                 await _productService.AddProductAsync(product);
+
+                // Audit log
+                await _queueStorageService.SendMessagesAsync(new
+                {
+                    Action = "Create Product",
+                    Entity = "Product",
+                    ProductName = product.ProductName,
+                    ProductRowKey = product.RowKey,
+                    Timestamp = DateTime.UtcNow
+                });
+
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
@@ -124,6 +135,15 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Controllers
             {
                 product.ImageSasUrl = _blobStorageService.GetImageSasUri(product.Photo);
             }
+            // Audit log
+            await _queueStorageService.SendMessagesAsync(new
+            {
+                Action = "Edit Product",
+                Entity = "Product",
+                ProductName = product.ProductName,
+                ProductRowKey = product.RowKey,
+                Timestamp = DateTime.UtcNow
+            });
 
             return RedirectToAction(nameof(Index));
         }
@@ -159,6 +179,16 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Controllers
                 await _productService.DeleteProductAsync(partitionKey, rowKey);
 
             }
+
+            // Audit log
+            await _queueStorageService.SendMessagesAsync(new
+            {
+                Action = "Delete Product",
+                Entity = "Product",
+                ProductName = product.ProductName,
+                ProductRowKey = product.RowKey,
+                Timestamp = DateTime.UtcNow
+            });
 
             return RedirectToAction(nameof(Index));
         }

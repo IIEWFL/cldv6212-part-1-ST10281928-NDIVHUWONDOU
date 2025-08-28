@@ -49,8 +49,8 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Controllers
             var order = await _orderService.GetOrderAsync(partitionKey, rowKey);
             if (order == null) return NotFound();
 
-            var customer = await _customerService.GetCustomerAsync("Customer", order.CustomerId!);
-            var product = await _productService.GetProductAsync("Product", order.ProductId!);
+            var customer = await _customerService.GetCustomerAsync("customer", order.CustomerId!);
+            var product = await _productService.GetProductAsync("product", order.ProductId!);
 
             ViewBag.CustomerName = customer?.CustomerFirstName ?? "Unknown";
             ViewBag.ProductName = product?.ProductName ?? "Unknown";
@@ -102,6 +102,7 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Controllers
         {
             if (ModelState.IsValid)
             {
+                order.OrderDate = DateTime.SpecifyKind(order.OrderDate, DateTimeKind.Utc);
                 await _orderService.UpdateOrderAsync(order);
                 return RedirectToAction(nameof(Index));
             }
@@ -115,8 +116,8 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Controllers
             var order = await _orderService.GetOrderAsync(partitionKey, rowKey);
             if (order == null) return NotFound();
 
-            var customer = await _customerService.GetCustomerAsync("Customer", order.CustomerId!);
-            var product = await _productService.GetProductAsync("Product", order.ProductId!);
+            var customer = await _customerService.GetCustomerAsync("customer", order.CustomerId!);
+            var product = await _productService.GetProductAsync("product", order.ProductId!);
 
             ViewBag.CustomerName = customer?.CustomerFirstName ?? "Unknown";
             ViewBag.ProductName = product?.ProductName ?? "Unknown";
@@ -139,8 +140,8 @@ namespace ST10281918_NDIVHUWONDOU_CLDV6212_PART1.Controllers
             var customers = await _customerService.GetAllCustomersAsync();
             var products = await _productService.GetAllProductAsync();
 
-            ViewBag.Customers = new SelectList(customers, "RowKey", "Name");
-            ViewBag.Products = new SelectList(products, "RowKey", "Name");
+            ViewBag.Customers = new SelectList(customers, "RowKey", "CustomerFirstName");
+            ViewBag.Products = new SelectList(products, "RowKey", "ProductName");
         }
     }
 }
